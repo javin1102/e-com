@@ -1,8 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
-
+const cors = require("cors");
 app.use(express.json({ extended: false }));
+app.use(cors());
 //connect to DB
 const connectDB = async () => {
   try {
