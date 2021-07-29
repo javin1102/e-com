@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Form, Button, Container, Alert } from "react-bootstrap";
 import logo from "../images/logo.svg";
 import { NavLink, Redirect } from "react-router-dom";
-import { registerUser } from "../redux/register-action";
+import { registerUser } from "../redux/auth/register-action";
 import { useDispatch, useSelector } from "react-redux";
 
 const Register = () => {
@@ -16,7 +16,7 @@ const Register = () => {
   //REDUX
   const dispatch = useDispatch();
   const { status, message } = useSelector((state) => state.message);
-  const { isAuthenticated } = useState((state) => state.user);
+  const { isAuthenticated } = useSelector((state) => state.user);
 
   //Form submit handler
   const handleSubmit = (event) => {
@@ -31,13 +31,8 @@ const Register = () => {
       password.length >= 8 &&
       confirmPassword === password
     ) {
-      dispatch(
-        registerUser({
-          name,
-          email,
-          password,
-        })
-      );
+      const data = { name, email, password };
+      dispatch(registerUser(data));
     }
   };
 
@@ -52,7 +47,6 @@ const Register = () => {
       className="d-flex flex-column justify-content-center"
       style={{ minHeight: "100vh" }}
     >
-      {/* if register success then redirect to homepage */}
       {isAuthenticated && <Redirect to="/" />}
 
       <img

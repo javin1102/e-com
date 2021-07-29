@@ -1,9 +1,21 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import css from "./app.css";
+import { useDispatch } from "react-redux";
+import { authAction } from "./redux/auth/auth-action";
+import { useEffect } from "react";
+
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (localStorage.getItem("x-auth-token")) dispatch(authAction());
+  }, [dispatch]);
   return (
     <Router>
       <Switch>

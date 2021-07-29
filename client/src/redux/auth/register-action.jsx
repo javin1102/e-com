@@ -1,6 +1,6 @@
 import axios from "axios";
-import { messageAction } from "./message-slice";
-import { userAction } from "./user-slice";
+import { messageAction } from "../message-slice";
+import { userAction } from "../user-slice";
 
 export const registerUser = (data) => {
   return async (dispatch) => {
@@ -21,7 +21,7 @@ export const registerUser = (data) => {
 
     try {
       const res = await registerRequest();
-      console.log(res);
+
       dispatch(
         messageAction.showNotification({
           status: res.status,
@@ -40,6 +40,12 @@ export const registerUser = (data) => {
         messageAction.showNotification({
           status: err.response.status,
           message: err.response.data.msg,
+        })
+      );
+      dispatch(
+        userAction.authenticate({
+          token: "",
+          isAuthenticated: false,
         })
       );
     }

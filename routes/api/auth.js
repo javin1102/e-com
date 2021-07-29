@@ -11,7 +11,7 @@ const bcrypt = require("bcryptjs");
 //@desc Authentication ROUTE (check if token still valid and get user data)
 router.get("/", auth, async (req, res) => {
   try {
-    const user = await User.findOne(req.userId).select("-password");
+    const user = await User.findById(req.userId).select("-password");
     res.json(user);
   } catch (err) {
     console.error(err);
@@ -40,7 +40,7 @@ router.post(
 
       //if email is not exists, show error
       if (!user) {
-        return res.status(400).json({ msg: "User not found!" });
+        return res.status(400).json({ msg: "Email does not exist!" });
       }
       //user is exists, compare Password
       const isMatch = await bcrypt.compare(password, user.password);
