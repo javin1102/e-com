@@ -1,6 +1,7 @@
 import axios from "axios";
 import { messageAction } from "./message-slice";
 import { userAction } from "./user-slice";
+
 export const registerUser = (data) => {
   return async (dispatch) => {
     const registerRequest = async () => {
@@ -20,24 +21,25 @@ export const registerUser = (data) => {
 
     try {
       const res = await registerRequest();
+      console.log(res);
       dispatch(
         messageAction.showNotification({
-          status: 200,
-          message: "Register successfully",
+          status: res.status,
+          message: res.data.msg,
         })
       );
       dispatch(
         userAction.authenticate({
-          token: res.data,
+          token: res.data.token,
           isAuthenticated: true,
         })
       );
     } catch (err) {
-      console.error(err);
+      console.error(err.response.status);
       dispatch(
         messageAction.showNotification({
-          status: 500,
-          message: "Failed to register",
+          status: err.response.status,
+          message: err.response.data.msg,
         })
       );
     }

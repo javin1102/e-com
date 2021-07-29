@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Form, Button, Container } from "react-bootstrap";
+import { Form, Button, Container, Alert } from "react-bootstrap";
 import logo from "../images/logo.svg";
-import { NavLink } from "react-router-dom";
+import { NavLink, Redirect } from "react-router-dom";
 import { registerUser } from "../redux/register-action";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -15,7 +15,8 @@ const Register = () => {
 
   //REDUX
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.user.token);
+  const { status, message } = useSelector((state) => state.message);
+  const { isAuthenticated } = useState((state) => state.user);
 
   //Form submit handler
   const handleSubmit = (event) => {
@@ -51,6 +52,9 @@ const Register = () => {
       className="d-flex flex-column justify-content-center"
       style={{ minHeight: "100vh" }}
     >
+      {/* if register success then redirect to homepage */}
+      {isAuthenticated && <Redirect to="/" />}
+
       <img
         src={logo}
         alt="images"
@@ -58,6 +62,11 @@ const Register = () => {
         className="align-self-center"
       />
       <h2 className="align-self-center mt-2">INCOMING</h2>
+
+      {/* show alert if register failed */}
+      {(status === 400 || status === 500) && (
+        <Alert variant="danger">{message}</Alert>
+      )}
       <Form noValidate onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formBasicUsername">
           <Form.Label>

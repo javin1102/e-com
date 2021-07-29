@@ -30,7 +30,7 @@ router.post(
     try {
       const user = await User.findOne({ email });
       if (user) {
-        return res.status(400).json({ msg: "User already exists" });
+        return res.status(400).json({ msg: "Email already exists" });
       }
       const newUser = new User({
         name,
@@ -49,7 +49,7 @@ router.post(
         },
         (err, token) => {
           if (err) throw err;
-          res.json({ token });
+          res.json({ token, msg: "Register Success" });
         }
       );
     } catch (err) {
