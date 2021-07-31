@@ -1,10 +1,24 @@
 import { configureStore } from "@reduxjs/toolkit";
 import messageSlice from "./message-slice";
 import userSlice from "./user-slice";
+import storage from "redux-persist/lib/storage";
+import { persistReducer } from "redux-persist";
+import { combineReducers } from "redux";
+import thunk from "redux-thunk";
+
+const persistConfig = {
+  key: "root",
+  storage,
+};
+const reducers = combineReducers({
+  message: messageSlice.reducer,
+  user: userSlice.reducer,
+});
+const persistedReducer = persistReducer(persistConfig, reducers);
+
 const store = configureStore({
-  reducer: {
-    message: messageSlice.reducer,
-    user: userSlice.reducer,
-  },
+  reducer: persistedReducer,
+  devTools: process.env.NODE_ENV !== "production",
+  middleware: [thunk],
 });
 export default store;

@@ -36,6 +36,7 @@ export const loginUser = (data, rememberMe) => {
       if (rememberMe) {
         localStorage.setItem("x-auth-token", res.data.token);
       }
+      sessionStorage.setItem("x-auth-token", res.data.token);
     } catch (err) {
       console.error(err.response.status);
       dispatch(

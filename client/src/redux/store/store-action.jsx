@@ -1,0 +1,71 @@
+import { userAction } from "../user-slice";
+import axios from "axios";
+import { base_url } from "../../utils/utils";
+export const getStoreAction = (token) => {
+  return async (dispatch) => {
+    const getStoreRequest = async () => {
+      const config = {
+        headers: {
+          "x-auth-token": token,
+        },
+      };
+      const response = await axios.get(`${base_url}/store`, config);
+      return response;
+    };
+    try {
+      const res = await getStoreRequest();
+      dispatch(
+        userAction.getStoreData({
+          storeId: res.data._id,
+          products: res.data.products,
+          storeName: res.data.name,
+        })
+      );
+    } catch (err) {
+      console.error(err.response.status);
+      dispatch(
+        userAction.getStoreData({
+          storeId: null,
+          products: [],
+          storeName: null,
+        })
+      );
+    }
+  };
+};
+
+export const registerStoreAction = (data, token) => {
+  return async (dispatch) => {
+    const registerStoreRequest = async () => {
+      const config = {
+        headers: {
+          "x-auth-token": token,
+          "Content-Type": "application/json",
+        },
+      };
+      const body = JSON.stringify(data);
+      const response = await axios.post(`${base_url}/store`, body, config);
+      return response;
+    };
+
+    try {
+      const res = await registerStoreRequest();
+      dispatch(
+        userAction.getStoreData({
+          storeId: res.data._id,
+          products: res.data.products,
+          storeName: res.data.name,
+        })
+      );
+    } catch (err) {
+      console.error(err.response);
+      dispatch(
+        userAction.getStoreData({
+          storeId: null,
+          products: [],
+          storeName: null,
+        })
+      );
+    }
+  };
+};

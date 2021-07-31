@@ -2,12 +2,12 @@ import axios from "axios";
 import { messageAction } from "../message-slice";
 import { userAction } from "../user-slice";
 
-export const authAction = () => {
+export const authAction = (token) => {
   return async (dispatch) => {
     const authRequest = async () => {
       const config = {
         headers: {
-          "x-auth-token": localStorage.getItem("x-auth-token").toString(),
+          "x-auth-token": token,
         },
       };
       const response = await axios.get(
@@ -26,7 +26,7 @@ export const authAction = () => {
       );
       dispatch(
         userAction.authenticate({
-          token: res.data.token,
+          token: token,
           isAuthenticated: true,
         })
       );

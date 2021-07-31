@@ -1,0 +1,19 @@
+.nav-a-1 {
+  text-decoration: none;
+  color: rgb(141, 141, 141);
+  cursor: pointer;
+}
+.nav-a-1:hover {
+  color: rgb(43, 43, 43);
+}
+
+.nav-a-1 .cart-amount {
+  border-radius: 50%;
+  background-color: orangered;
+  color: white;
+  font-weight: 500;
+  width: 1.5rem;
+  height: 1.5rem;
+  text-align: center;
+  display: inline-block;
+}

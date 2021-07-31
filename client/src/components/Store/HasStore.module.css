@@ -1,0 +1,9 @@
+.nav-a-1 {
+  text-decoration-color: rgb(141, 141, 141);
+  color: rgb(141, 141, 141);
+  cursor: pointer;
+}
+.nav-a-1:hover {
+  color: currentColor;
+  text-decoration-color: currentColor;
+}
