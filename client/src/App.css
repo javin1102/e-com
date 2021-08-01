@@ -1,3 +1,8 @@
 #root {
   min-height: 100vh;
 }
+.filepond--root,
+.filepond--root .filepond--drop-label {
+  height: 220px;
+  width: 180px;
+}

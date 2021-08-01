@@ -1,6 +1,7 @@
 import { userAction } from "../user-slice";
 import axios from "axios";
 import { base_url } from "../../utils/utils";
+import { messageAction } from "../message-slice";
 export const getStoreAction = (token) => {
   return async (dispatch) => {
     const getStoreRequest = async () => {
@@ -64,6 +65,45 @@ export const registerStoreAction = (data, token) => {
           storeId: null,
           products: [],
           storeName: null,
+        })
+      );
+    }
+  };
+};
+
+export const addProductAction = (data, token) => {
+  return async (dispatch) => {
+    const addProductRequest = async () => {
+      const config = {
+        headers: {
+          "x-auth-token": token,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": true,
+        },
+      };
+      const body = JSON.stringify(data);
+      const response = await axios.post(
+        `${base_url}/store/product`,
+        body,
+        config
+      );
+      return response;
+    };
+    try {
+      const res = await addProductRequest();
+      console.log(res);
+      dispatch(
+        messageAction.showNotification({
+          status: res.status,
+          message: res.data.message,
+        })
+      );
+    } catch (err) {
+      console.error(err.response);
+      dispatch(
+        messageAction.showNotification({
+          status: err.response.status,
+          message: err.response.data.msg,
         })
       );
     }
