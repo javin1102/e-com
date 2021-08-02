@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Nav from "../components/Nav";
-import { Container, Form, Button } from "react-bootstrap";
+import { Container, Form, Button, Alert, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { addProductAction } from "../redux/store/store-action";
 import { FilePond, registerPlugin } from "react-filepond";
+import { Redirect } from "react-router-dom";
+import { messageAction } from "../redux/message-slice";
 import "filepond/dist/filepond.min.css";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
@@ -22,6 +24,7 @@ registerPlugin(
 const AddProduct = () => {
   //Set state
   const [validated, setValidated] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [product, setProduct] = useState({
     name: "",
     price: "",
@@ -31,10 +34,11 @@ const AddProduct = () => {
       type: "",
     },
   });
-  //redux
-  const message = useSelector((state) => state.message);
+
+  const { status, message } = useSelector((state) => state.message);
   const { token } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setValidated(true);
@@ -42,19 +46,29 @@ const AddProduct = () => {
       product.name.length === 0 ||
       product.price.length === 0 ||
       product.stock.length === 0 ||
+      product.price < 0 ||
+      product.stock < 0 ||
       product.pathName.data.length === 0
     )
       return;
+    setIsSubmitted(true);
     dispatch(addProductAction(product, token));
   };
 
   return (
     <>
       <Nav searchBar={false} />
+      {status === 200 && isSubmitted && <Redirect to="/yourStore" />}
       <Container
         className="d-flex flex-column justify-content-center"
         style={{ minHeight: "90vh" }}
       >
+        {console.log(status)}
+        {status !== 200 && status !== null && isSubmitted && (
+          <Alert variant="danger" className="mt-5">
+            {message}
+          </Alert>
+        )}
         <Form noValidate onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formBasicProductName">
             <Form.Label>
@@ -89,10 +103,13 @@ const AddProduct = () => {
                   return { ...prev, price };
                 })
               }
-              isInvalid={validated && product.price.length === 0}
+              min="0"
+              isInvalid={
+                validated && (product.price.length === 0 || product.price < 0)
+              }
             />
             <Form.Control.Feedback type="invalid">
-              Product price field is required
+              Invalid product price
             </Form.Control.Feedback>
           </Form.Group>
 
@@ -103,13 +120,16 @@ const AddProduct = () => {
             <Form.Control
               type="number"
               placeholder="Enter your product name"
+              min="0"
               onChange={(e) =>
                 setProduct((prev) => {
                   const stock = e.target.value;
                   return { ...prev, stock };
                 })
               }
-              isInvalid={validated && product.stock.length === 0}
+              isInvalid={
+                validated && (product.stock.length === 0 || product.stock < 0)
+              }
             />
             <Form.Control.Feedback type="invalid">
               Invalid product stock
@@ -125,6 +145,11 @@ const AddProduct = () => {
               imageResizeTargetWidth={180}
               imageResizeTargetHeight={220}
               imagePreviewHeight={220}
+              onremovefile={() =>
+                setProduct((prev) => {
+                  return { ...prev, pathName: { data: "", type: "" } };
+                })
+              }
               onaddfile={(e, file) => {
                 setProduct((prev) => {
                   const data = file.getFileEncodeBase64String();
@@ -138,13 +163,25 @@ const AddProduct = () => {
             />
             <Form.Control
               type="hidden"
-              isInvalid={validated && product.pathName.length === 0}
+              isInvalid={validated && product.pathName.data.length === 0}
             />
             <Form.Control.Feedback type="invalid">
               Product image is required
             </Form.Control.Feedback>
           </Form.Group>
-          <div className="d-grid gap-2 d-md-flex justify-content-md-center mt-5">
+          {message === "Loading" && (
+            <>
+              <Spinner
+                className="d-flex mx-auto"
+                animation="border"
+                role="status"
+              >
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </>
+          )}
+
+          <div className="d-grid gap-2 d-md-flex justify-content-md-center my-5">
             <Button variant="dark" type="submit">
               Add Product
             </Button>

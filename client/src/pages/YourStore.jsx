@@ -8,13 +8,14 @@ import { Redirect } from "react-router-dom";
 const YourStore = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const { id: storeId, name: storeName, products } = user.store;
-  console.log(user);
+  const { id: storeId, name: storeName } = user.store;
+
   useEffect(() => {
     if (user.token.length > 0) dispatch(getStoreAction(user.token));
   }, [dispatch, user.token]);
 
   const renderComponent = storeId === null ? <NoStore /> : <HasStore />;
+
   return (
     <>
       <Nav searchBar={props.searchBar} />

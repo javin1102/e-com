@@ -98,17 +98,21 @@ router.get("/product", auth, async (req, res) => {
   try {
     const store = await Store.findOne({ user: req.userId });
     if (!store) return res.status(404).json({ msg: "You dont have a store" });
-    let imagePath = [];
+    //   const path = `data:${
+    //     product.pathType
+    //   };charset=utf-8;base64,${product.pathName.toString("base64")}`;
+    let p = [];
     store.products.forEach((product) => {
       const path = `data:${
         product.pathType
       };charset=utf-8;base64,${product.pathName.toString("base64")}`;
-      imagePath.push(path);
+      const { id, name, price, stock, date } = product;
+      p.push({ id, name, price, stock, date, path });
     });
-    return res.status(200).json({ imagePath: imagePath });
+    return res.status(200).json(p);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ msg: "Server Error" });
+    return res.status(500).json({ msg: "Server Error" });
   }
 });
 

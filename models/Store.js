@@ -41,13 +41,13 @@ const StoreSchema = new mongoose.Schema({
     },
   ],
 });
-StoreSchema.virtual("imagePath").get(function () {
-  console.log("a");
-  if (this.products.pathName !== null && this.products.pathType !== null) {
-    return `data:${
-      this.products.pathType
-    };charset=utf-8;base64,${this.products.pathName.toString("base64")}`;
-  }
-});
+// StoreSchema.virtual("imagePath").get(function () {
+//   console.log("a");
+//   if (this.products.pathName !== null && this.products.pathType !== null) {
+//     return `data:${
+//       this.products.pathType
+//     };charset=utf-8;base64,${this.products.pathName.toString("base64")}`;
+//   }
+// });
 
 module.exports = Store = mongoose.model("Store", StoreSchema);

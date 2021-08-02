@@ -54,7 +54,6 @@ export const registerStoreAction = (data, token) => {
       dispatch(
         userAction.getStoreData({
           storeId: res.data._id,
-          products: res.data.products,
           storeName: res.data.name,
         })
       );
@@ -90,8 +89,14 @@ export const addProductAction = (data, token) => {
       return response;
     };
     try {
+      dispatch(
+        messageAction.showNotification({
+          status: null,
+          message: "Loading",
+        })
+      );
       const res = await addProductRequest();
-      console.log(res);
+
       dispatch(
         messageAction.showNotification({
           status: res.status,
@@ -99,7 +104,46 @@ export const addProductAction = (data, token) => {
         })
       );
     } catch (err) {
-      console.error(err.response);
+      console.error(err.response.status);
+      dispatch(
+        messageAction.showNotification({
+          status: err.response.status,
+          message: err.response.data.msg,
+        })
+      );
+    }
+  };
+};
+
+export const getStoreProductsAction = (token) => {
+  return async (dispatch) => {
+    const getProductsRequest = async () => {
+      const config = {
+        headers: {
+          "x-auth-token": token,
+        },
+      };
+      const response = await axios.get(`${base_url}/store/product`, config);
+      return response;
+    };
+    try {
+      const res = await getProductsRequest();
+      console.log(res);
+
+      dispatch(userAction.getProductData({ products: res.data }));
+      dispatch(
+        messageAction.showNotification({
+          status: res.status,
+          message: "Sucess",
+        })
+      );
+    } catch (err) {
+      console.error(err.response.status);
+      dispatch(
+        userAction.getProductData({
+          products: [],
+        })
+      );
       dispatch(
         messageAction.showNotification({
           status: err.response.status,

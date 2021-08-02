@@ -6,7 +6,7 @@ const messageSlice = createSlice({
     message: null,
   },
   reducers: {
-    showNotification(state, action) {
+    showNotification(state = { status: null, message: null }, action) {
       state.status = action.payload.status;
       state.message = action.payload.message;
     },
