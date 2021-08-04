@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Nav from "../components/Nav";
 import { Container, Form, Button, Alert, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { addProductAction } from "../redux/store/store-action";
+import { updateProductAction } from "../redux/store/store-action";
+import { useParams } from "react-router-dom";
 import { FilePond, registerPlugin } from "react-filepond";
 import { Redirect } from "react-router-dom";
 import "filepond/dist/filepond.min.css";
@@ -21,10 +22,24 @@ registerPlugin(
   FilePondPluginFileEncode
 );
 
-const AddProduct = () => {
+const UpdateProduct = () => {
+  //params
+  const { productId } = useParams();
+
+  //redux
+  const { status, message } = useSelector((state) => state.message);
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  const selectedProduct = user.store.products.find(
+    (product) => product.id === productId
+  );
+
   //Set state
   const [validated, setValidated] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [pond, setPond] = useState();
   const [product, setProduct] = useState({
     name: "",
     price: "",
@@ -35,12 +50,9 @@ const AddProduct = () => {
     },
   });
 
-  const { status, message } = useSelector((state) => state.message);
-  const { token } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-
   const handleSubmit = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     setValidated(true);
     if (
       product.name.length === 0 ||
@@ -52,9 +64,27 @@ const AddProduct = () => {
     )
       return;
     setIsSubmitted(true);
-    dispatch(addProductAction(product, token));
+    dispatch(updateProductAction(productId, product, user.token));
   };
-
+  useEffect(() => {
+    setProduct(() => {
+      return {
+        name: selectedProduct.name,
+        price: selectedProduct.price,
+        stock: selectedProduct.stock,
+        pathName: {
+          data: "",
+          type: "",
+        },
+      };
+    });
+  }, [selectedProduct]);
+  useEffect(() => {
+    if (!!pond && !!selectedProduct.path && !imageLoaded) {
+      pond.addFile(selectedProduct.path);
+      setImageLoaded(true);
+    }
+  }, [pond, selectedProduct.path, imageLoaded]);
   return (
     <>
       <Nav searchBar={false} />
@@ -82,6 +112,7 @@ const AddProduct = () => {
                   return { ...prev, name };
                 })
               }
+              value={product.name}
               isInvalid={validated && product.name.length === 0}
             />
             <Form.Control.Feedback type="invalid">
@@ -102,6 +133,7 @@ const AddProduct = () => {
                   return { ...prev, price };
                 })
               }
+              value={product.price}
               min="0"
               isInvalid={
                 validated && (product.price.length === 0 || product.price < 0)
@@ -129,6 +161,7 @@ const AddProduct = () => {
               isInvalid={
                 validated && (product.stock.length === 0 || product.stock < 0)
               }
+              value={product.stock}
             />
             <Form.Control.Feedback type="invalid">
               Invalid product stock
@@ -141,9 +174,11 @@ const AddProduct = () => {
               allowFileSizeValidation
               allowImageResize
               maxFileSize={2000000}
-              imageResizeTargetWidth={180}
-              imageResizeTargetHeight={220}
-              imagePreviewHeight={220}
+              imageResizeTargetWidth={300}
+              imageResizeTargetHeight={150}
+              imagePreviewMinHeight={150}
+              imagePreviewWidth={300}
+              ref={(ref) => setPond(ref)}
               onremovefile={() =>
                 setProduct((prev) => {
                   return { ...prev, pathName: { data: "", type: "" } };
@@ -152,7 +187,14 @@ const AddProduct = () => {
               onaddfile={(e, file) => {
                 setProduct((prev) => {
                   const data = file.getFileEncodeBase64String();
-                  const type = file.file.type;
+                  let str = file.fileType;
+                  let newStr = "";
+                  if (str.includes(";")) {
+                    const index = str.indexOf(";");
+                    newStr = str.slice(0, index);
+                  } else newStr = str;
+                  const type = newStr;
+
                   return {
                     ...prev,
                     pathName: { data, type },
@@ -179,10 +221,10 @@ const AddProduct = () => {
               </Spinner>
             </>
           )}
-
+          {console.log(product)}
           <div className="d-grid gap-2 d-md-flex justify-content-md-center my-5">
             <Button variant="dark" type="submit">
-              Add Product
+              Update Product
             </Button>
           </div>
         </Form>
@@ -190,4 +232,4 @@ const AddProduct = () => {
     </>
   );
 };
-export default AddProduct;
+export default UpdateProduct;

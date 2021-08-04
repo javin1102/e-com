@@ -23,7 +23,6 @@ export const getStoreAction = (token) => {
         })
       );
     } catch (err) {
-      console.error(err.response.status);
       dispatch(
         userAction.getStoreData({
           storeId: null,
@@ -104,7 +103,6 @@ export const addProductAction = (data, token) => {
         })
       );
     } catch (err) {
-      console.error(err.response.status);
       dispatch(
         messageAction.showNotification({
           status: err.response.status,
@@ -115,7 +113,7 @@ export const addProductAction = (data, token) => {
   };
 };
 
-export const getStoreProductsAction = (token) => {
+export const getProductsAction = (token) => {
   return async (dispatch) => {
     const getProductsRequest = async () => {
       const config = {
@@ -128,22 +126,126 @@ export const getStoreProductsAction = (token) => {
     };
     try {
       const res = await getProductsRequest();
-      console.log(res);
 
       dispatch(userAction.getProductData({ products: res.data }));
       dispatch(
         messageAction.showNotification({
           status: res.status,
-          message: "Sucess",
+          message: "Success",
         })
       );
     } catch (err) {
-      console.error(err.response.status);
       dispatch(
         userAction.getProductData({
           products: [],
         })
       );
+      dispatch(
+        messageAction.showNotification({
+          status: err.response.status,
+          message: err.response.data.msg,
+        })
+      );
+    }
+  };
+};
+
+export const deleteProductAction = (id, token) => {
+  return async (dispatch) => {
+    const deleteRequest = async () => {
+      const config = {
+        headers: {
+          "x-auth-token": token,
+        },
+      };
+      const response = await axios.delete(
+        `${base_url}/store/product/${id}`,
+        config
+      );
+      return response;
+    };
+    try {
+      dispatch(
+        messageAction.showNotification({
+          status: null,
+          message: "Loading...",
+        })
+      );
+      const res = await deleteRequest();
+      dispatch(userAction.getProductData({ products: res.data }));
+      dispatch(
+        messageAction.showNotification({
+          status: res.status,
+          message: "Success",
+        })
+      );
+    } catch (err) {
+      dispatch(
+        messageAction.showNotification({
+          status: err.response.status,
+          message: err.response.data.msg,
+        })
+      );
+    }
+  };
+};
+
+export const updateProductAction = (id, data, token) => {
+  return async (dispatch) => {
+    const updateRequest = async () => {
+      const config = {
+        headers: {
+          "x-auth-token": token,
+        },
+      };
+      // const body = JSON.stringify(data);
+      const response = await axios.put(
+        `${base_url}/store/product/${id}`,
+        data,
+        config
+      );
+      return response;
+    };
+
+    try {
+      dispatch(
+        messageAction.showNotification({
+          status: null,
+          message: "Loading...",
+        })
+      );
+      const res = await updateRequest();
+
+      const newProducts = res.data.map((product) => {
+        const {
+          date,
+          _id: id,
+          name,
+          pathName,
+          pathType,
+          price,
+          stock,
+        } = product;
+        return {
+          date,
+          id,
+          name,
+          pathName,
+          pathType,
+          price,
+          stock,
+        };
+      });
+
+      dispatch(userAction.getProductData({ products: newProducts }));
+      dispatch(
+        messageAction.showNotification({
+          status: res.status,
+          message: "Success",
+        })
+      );
+    } catch (err) {
+      console.log(err.response);
       dispatch(
         messageAction.showNotification({
           status: err.response.status,

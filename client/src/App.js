@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import YourStore from "./pages/YourStore";
 import AddProduct from "./pages/AddProduct";
+import UpdateProduct from "./pages/UpdateProduct";
 import { useDispatch } from "react-redux";
 import { authAction } from "./redux/auth/auth-action";
 import { useEffect } from "react";
@@ -33,6 +34,9 @@ function App() {
         </Route>
         <Route exact path="/yourStore/addProduct">
           <AddProduct />
+        </Route>
+        <Route exact path="/yourStore/updateProduct/:productId">
+          <UpdateProduct />
         </Route>
       </Switch>
     </Router>

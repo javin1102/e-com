@@ -1,17 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { Card, Button } from "react-bootstrap";
-import logo from "../../../images/logo.svg";
 import classes from "./StoreCard.module.css";
+import { useHistory } from "react-router-dom";
+
 const formatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "IDR",
 });
 const StoreCard = (props) => {
+  const history = useHistory();
+  const deleteHandler = () => {
+    props.showModal(true);
+    props.selectedIdHandler(props.id);
+  };
+
+  const updateHandler = () => {
+    history.push(`/yourStore/updateProduct/${props.id}`);
+  };
+
   return (
     <Card style={{ width: "250px", overflow: "hidden" }}>
       <Card.Img src={props.path} variant="top" className={classes.img} />
-
       <Card.Body>
         <Card.Title
           style={{ fontSize: "15px" }}
@@ -27,8 +37,14 @@ const StoreCard = (props) => {
         >
           Stock : {props.stock}
         </Card.Text>
-        <Button variant="outline-secondary">Update Product</Button>
-        <Button variant="outline-danger" className="mt-3">
+        <Button variant="outline-secondary" onClick={updateHandler}>
+          Update Product
+        </Button>
+        <Button
+          variant="outline-danger"
+          className="mt-3"
+          onClick={deleteHandler}
+        >
           Delete Product
         </Button>
       </Card.Body>

@@ -24,7 +24,7 @@ const userSlice = createSlice({
     getProductData(state, action) {
       state.store.products = action.payload.products;
     },
-    logoutUser(state, action) {
+    logoutUser() {
       return initialState;
     },
   },

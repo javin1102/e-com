@@ -1,21 +1,64 @@
-import React, { useEffect } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Container, Row, Col, Alert } from "react-bootstrap";
 import StoreCard from "./components/StoreCard";
 import { NavLink } from "react-router-dom";
 import classes from "./HasStore.module.css";
-import { getStoreProductsAction } from "../../redux/store/store-action";
-import { useDispatch, useSelector } from "react-redux";
+import { getProductsAction } from "../../redux/store/store-action";
+import { useDispatch, useSelector, connect } from "react-redux";
+import StoreModal from "./components/StoreModal";
+
 const HasStore = () => {
+  const [showError, setShowError] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+
   //redux
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const { products } = useSelector((state) => state.user.store);
+  const { products } = user.store;
+  const { message } = useSelector((state) => state.message);
+
+  //stateHandler
+  const showErrorHandler = (val) => setShowError(val);
+  const showModalHandler = (val) => setShowModal(val);
 
   useEffect(() => {
-    dispatch(getStoreProductsAction(user.token));
+    let isCancelled = false;
+    const runAsync = async () => {
+      try {
+        dispatch(getProductsAction(user.token));
+      } catch (e) {
+        if (!isCancelled) {
+          throw e;
+        }
+      }
+    };
+    runAsync();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [dispatch, user.token]);
+
+  useEffect(() => {
+    if (showError) {
+      setTimeout(() => {
+        setShowError(false);
+      }, 3000);
+    }
+  }, [showError]);
+
   return (
     <Container className="mt-5">
+      {showError && <Alert variant="danger">{message}</Alert>}
+
+      <StoreModal
+        showModal={showModal}
+        showError={showErrorHandler}
+        showModalHandler={showModalHandler}
+        selectedId={selectedId}
+      />
+
       <Row className="gx-1 gy-5">
         <NavLink
           to="/yourStore/addProduct"
@@ -33,6 +76,8 @@ const HasStore = () => {
                 price={product.price}
                 stock={product.stock}
                 path={product.path}
+                showModal={showModalHandler}
+                selectedIdHandler={(id) => setSelectedId(id)}
               />
             </Col>
           );
