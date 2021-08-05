@@ -27,5 +27,6 @@ app.get("/", (req, res) => res.send("API RUNNING"));
 app.use("/api/register", require("./routes/api/register"));
 app.use("/api/auth", require("./routes/api/auth"));
 app.use("/api/store", require("./routes/api/store"));
+app.use("/api/products", require("./routes/api/products"));
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log("Server is listening on port 5000"));

@@ -12,7 +12,7 @@ router.get("/", auth, async (req, res) => {
   try {
     const store = await Store.findOne({ user: req.userId });
     if (!store)
-      return res.status(400).json({ msg: "You don't have a store registered" });
+      return res.status(404).json({ msg: "You don't have a store registered" });
 
     return res.status(200).json(store);
   } catch (err) {

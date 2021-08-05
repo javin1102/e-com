@@ -4,7 +4,7 @@ import StoreCard from "./components/StoreCard";
 import { NavLink } from "react-router-dom";
 import classes from "./HasStore.module.css";
 import { getProductsAction } from "../../redux/store/store-action";
-import { useDispatch, useSelector, connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import StoreModal from "./components/StoreModal";
 
 const HasStore = () => {

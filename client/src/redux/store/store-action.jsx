@@ -168,7 +168,6 @@ export const deleteProductAction = (id, token) => {
       dispatch(
         messageAction.showNotification({
           status: null,
-          message: "Loading...",
         })
       );
       const res = await deleteRequest();
@@ -211,7 +210,7 @@ export const updateProductAction = (id, data, token) => {
       dispatch(
         messageAction.showNotification({
           status: null,
-          message: "Loading...",
+          message: "Loading",
         })
       );
       const res = await updateRequest();

@@ -221,7 +221,7 @@ const UpdateProduct = () => {
               </Spinner>
             </>
           )}
-          {console.log(product)}
+
           <div className="d-grid gap-2 d-md-flex justify-content-md-center my-5">
             <Button variant="dark" type="submit">
               Update Product

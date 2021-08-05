@@ -5,3 +5,9 @@
   -webkit-line-clamp: 2;
   display: -webkit-box;
 }
+
+.img {
+  width: 250px;
+  height: 150px;
+  object-fit: cover;
+}
