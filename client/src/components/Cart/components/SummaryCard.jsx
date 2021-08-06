@@ -1,25 +1,29 @@
 import React from "react";
 import classes from "./SummaryCard.module.css";
+import { useSelector } from "react-redux";
+import { formatter } from "../../../utils/utils";
 const SummaryCard = () => {
+  const results = useSelector((state) => state.cart);
   return (
     <div className={classes.card}>
       <h5>Cart Summary</h5>
       <ul>
-        <li>
-          <span className={classes.product}>Vivo V3</span>
-          <span className={classes.amount}>1 item(s)</span>
-          <span className={classes.p}>IDR 4,000,000</span>
-        </li>
-        <li>
-          <span className={classes.product}>Keyboard logitech</span>
-          <span className={classes.amount}>3 item(s)</span>
-          <span className={classes.p}>IDR 4,000,000</span>
-        </li>
+        {results.products.map((product) => (
+          <li>
+            <span className={classes.product}>{product.name}</span>
+            <span className={classes.amount}>{product.amount} item(s)</span>
+            <span className={classes.p}>
+              {formatter.format(product.price * product.amount)}
+            </span>
+          </li>
+        ))}
       </ul>
       <div className={classes.line}></div>
       <div className={classes["total-price"]}>
         <span>Total Price</span>
-        <span className={classes.price}>IDR 8,000,000</span>
+        <span className={classes.price}>
+          {formatter.format(results.totalPrice)}
+        </span>
       </div>
     </div>
   );

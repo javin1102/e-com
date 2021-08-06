@@ -1,21 +1,25 @@
 import React from "react";
-import { Card, Button, Container, Row, Col } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import CartCard from "./components/CartCard";
 import SummaryCard from "./components/SummaryCard";
+import { useSelector } from "react-redux";
 const HasCart = () => {
+  const results = useSelector((state) => state.cart);
+
   return (
     <Container style={{ marginTop: "100px" }}>
-      <CartCard />
-      <CartCard />
-      <CartCard />
-      <CartCard />
+      {results.products.map((product) => (
+        <CartCard
+          amount={product.amount}
+          id={product.id}
+          path={product.path}
+          price={product.price}
+          storeName={product.storeName}
+          name={product.name}
+        />
+      ))}
+
       <SummaryCard />
-      {/* <Row className="my-5">
-        <Col>2</Col>
-      </Row>
-      <Row className="my-5">
-        <Col>2</Col>
-      </Row> */}
     </Container>
   );
 };

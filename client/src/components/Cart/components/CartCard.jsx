@@ -2,21 +2,46 @@ import React from "react";
 import { Card, Button } from "react-bootstrap";
 import logo from "../../../images/logo.svg";
 import classes from "./CartCard.module.css";
-const CartCard = () => {
+import { formatter } from "../../../utils/utils";
+import { cartAction } from "../../../redux/cart/cart-slice";
+import { useDispatch } from "react-redux";
+const CartCard = (props) => {
+  const dispatch = useDispatch();
+  const product = {
+    id: props.id,
+    name: props.name,
+    price: props.price,
+    storeName: props.storeName,
+    path: props.path,
+  };
+  const addToCartHandler = () => {
+    dispatch(cartAction.addProductToCart({ product }));
+  };
+  const removeFromCartHandler = () => {
+    dispatch(cartAction.removeProductFromCart({ product }));
+  };
   return (
     <div className={classes.card}>
-      <img src={logo} alt="ProductImage" className={classes.img} />
+      <img src={props.path} alt="ProductImage" className={classes.img} />
       <div className={classes.desc}>
-        <h5>Product name</h5>
-        <p>Store name</p>
-        <h4>IDR 4,000,000</h4>
+        <h5>{props.name}</h5>
+        <p>{props.storeName}</p>
+        <h4>{formatter.format(props.price)}</h4>
       </div>
       <div className={classes.amount}>
-        <Button variant="outline-secondary" className="mb-2">
+        <Button
+          variant="outline-secondary"
+          className="mb-2"
+          onClick={addToCartHandler}
+        >
           +
         </Button>
-        <span>4</span>
-        <Button variant="outline-danger" className="mt-2">
+        <span>{props.amount}</span>
+        <Button
+          variant="outline-danger"
+          className="mt-2"
+          onClick={removeFromCartHandler}
+        >
           -
         </Button>
       </div>

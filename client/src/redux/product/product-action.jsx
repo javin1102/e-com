@@ -1,7 +1,7 @@
 import axios from "axios";
 import { base_url, productsLimit } from "../../utils/utils";
 import { messageAction } from "../message-slice";
-import { productListAction } from "../productlist-slice";
+import { productListAction } from "./productlist-slice";
 export const getAllProductsAction = () => {
   return async (dispatch) => {
     const getProductsRequest = async () => {

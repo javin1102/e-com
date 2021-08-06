@@ -19,7 +19,6 @@ const YourStore = (props) => {
   return (
     <>
       <Nav searchBar={props.searchBar} />
-
       {renderComponent}
       {!user.isAuthenticated && <Redirect to="/" />}
     </>
