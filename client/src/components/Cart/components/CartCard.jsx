@@ -24,9 +24,18 @@ const CartCard = (props) => {
     <div className={classes.card}>
       <img src={props.path} alt="ProductImage" className={classes.img} />
       <div className={classes.desc}>
-        <h5>{props.name}</h5>
-        <p>{props.storeName}</p>
-        <h4>{formatter.format(props.price)}</h4>
+        <h5 className={classes.name}>{props.name}</h5>
+        <p
+          style={{
+            color: "rgba(0,0,0,.5)",
+            lineHeight: "5px",
+            fontSize: "13.5px",
+            fontWeight: "500",
+          }}
+        >
+          {props.storeName}
+        </p>
+        <h5>{formatter.format(props.price)}</h5>
       </div>
       <div className={classes.amount}>
         <Button

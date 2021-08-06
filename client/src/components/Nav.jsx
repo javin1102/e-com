@@ -1,22 +1,29 @@
 import React from "react";
 import logo from "../images/logo.svg";
 import { Navbar, Container, Form, FormControl, Button } from "react-bootstrap";
-import { NavLink, useHistory } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import classes from "./Nav.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { userAction } from "../redux/user-slice";
 const Nav = (props) => {
   const { isAuthenticated } = useSelector((state) => state.user);
+  const results = useSelector((state) => state.cart);
   const dispatch = useDispatch();
-  const history = useHistory();
+
   const renderComponents = isAuthenticated ? (
     <>
-      <NavLink className={classes["nav-a-1"]} to="/yourStore">
-        Your Store
+      <NavLink className={classes["nav-a-1"]} to="/">
+        Home
       </NavLink>
+
       <NavLink className={classes["nav-a-1"] + " ms-4"} to="/yourCart">
         Your cart
-        <span className={classes["cart-amount"] + " ms-1"}>4</span>
+        <span className={classes["cart-amount"] + " ms-1"}>
+          {results.totalAmount}
+        </span>
+        <NavLink className={classes["nav-a-1"] + " ms-4"} to="/yourStore">
+          Your Store
+        </NavLink>
       </NavLink>
       <NavLink
         onClick={() => {

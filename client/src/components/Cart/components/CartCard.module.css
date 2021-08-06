@@ -32,3 +32,12 @@
   color: rgba(0, 0, 0, 0.7);
   font-weight: 500;
 }
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  display: -webkit-box;
+  width: 170px;
+}
