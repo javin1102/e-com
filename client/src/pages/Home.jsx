@@ -7,18 +7,31 @@ import { useSelector, useDispatch } from "react-redux";
 import { productsLimit } from "../utils/utils";
 
 const Home = () => {
-  //state
-  const [activePage, setActivePage] = useState(1);
-  const startIndex = (activePage - 1) * productsLimit;
-  const endIndex = activePage * productsLimit;
-
   //redux
   const dispatch = useDispatch();
 
   const { results } = useSelector((state) => state.productList);
+  const lastPages = results.maxPages > 3 ? 3 : results.maxPages;
+
+  //state
+  const [activePage, setActivePage] = useState(1);
+
+  const [beginIndex, setBeginIndex] = useState(1);
+  const [lastIndex, setLastIndex] = useState(lastPages);
+
+  const startIndex = (activePage - 1) * productsLimit;
+  const endIndex = activePage * productsLimit;
 
   let items = [];
-  for (let number = 1; number <= results.maxPages; number++) {
+  for (let number = beginIndex; number <= lastIndex; number++) {
+    if (activePage === lastIndex && lastIndex < results.maxPages) {
+      setLastIndex(lastIndex + 1);
+      setBeginIndex(beginIndex + 1);
+    } else if (activePage === beginIndex && beginIndex > 1) {
+      setLastIndex(lastIndex - 1);
+      setBeginIndex(beginIndex - 1);
+    }
+
     items.push(
       <Pagination.Item
         key={number}
@@ -66,6 +79,7 @@ const Home = () => {
             />
 
             {items}
+
             <Pagination.Next
               onClick={() => {
                 activePage < results.maxPages &&
