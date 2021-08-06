@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { deleteProductAction } from "../../../redux/store/store-action";
 import { useSelector, useDispatch } from "react-redux";
+import ReactDOM from "react-dom";
+
+const portalElement = document.getElementById("overlays");
 const StoreModal = (props) => {
   //state
   const [doneDeleteAction, setDoneDeleteAction] = useState(false);
@@ -25,24 +28,29 @@ const StoreModal = (props) => {
     setDoneDeleteAction(false);
   }, [doneDeleteAction, props, status]);
   return (
-    <Modal backdrop="static" keyboard={false} show={props.showModal}>
-      <Modal.Header closeButton onClick={closeModalHandler}>
-        <Modal.Title>Delete Product</Modal.Title>
-      </Modal.Header>
+    <>
+      {ReactDOM.createPortal(
+        <Modal backdrop="static" keyboard={false} show={props.showModal}>
+          <Modal.Header closeButton onClick={closeModalHandler}>
+            <Modal.Title>Delete Product</Modal.Title>
+          </Modal.Header>
 
-      <Modal.Body>
-        <p>Are you sure you want to delete this product?</p>
-      </Modal.Body>
+          <Modal.Body>
+            <p>Are you sure you want to delete this product?</p>
+          </Modal.Body>
 
-      <Modal.Footer>
-        <Button variant="secondary" onClick={closeModalHandler}>
-          Close
-        </Button>
-        <Button variant="danger" onClick={deleteHandler}>
-          Delete Product
-        </Button>
-      </Modal.Footer>
-    </Modal>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={closeModalHandler}>
+              Close
+            </Button>
+            <Button variant="danger" onClick={deleteHandler}>
+              Delete Product
+            </Button>
+          </Modal.Footer>
+        </Modal>,
+        portalElement
+      )}
+    </>
   );
 };
 

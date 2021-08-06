@@ -8,7 +8,7 @@ import { Redirect } from "react-router-dom";
 const YourStore = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const { id: storeId, name: storeName } = user.store;
+  const { id: storeId } = user.store;
 
   useEffect(() => {
     if (user.token.length > 0) dispatch(getStoreAction(user.token));
@@ -19,6 +19,7 @@ const YourStore = (props) => {
   return (
     <>
       <Nav searchBar={props.searchBar} />
+
       {renderComponent}
       {!user.isAuthenticated && <Redirect to="/" />}
     </>

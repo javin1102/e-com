@@ -37,7 +37,7 @@ const Nav = (props) => {
   );
 
   return (
-    <Navbar bg="light" variant="light">
+    <Navbar bg="light" variant="light" fixed="top">
       <Container>
         <NavLink className="navbar-brand " to="/">
           <img

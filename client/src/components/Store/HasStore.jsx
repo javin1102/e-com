@@ -23,21 +23,7 @@ const HasStore = () => {
   const showModalHandler = (val) => setShowModal(val);
 
   useEffect(() => {
-    let isCancelled = false;
-    const runAsync = async () => {
-      try {
-        dispatch(getProductsAction(user.token));
-      } catch (e) {
-        if (!isCancelled) {
-          throw e;
-        }
-      }
-    };
-    runAsync();
-
-    return () => {
-      isCancelled = true;
-    };
+    dispatch(getProductsAction(user.token));
   }, [dispatch, user.token]);
 
   useEffect(() => {
@@ -49,7 +35,7 @@ const HasStore = () => {
   }, [showError]);
 
   return (
-    <Container className="mt-5">
+    <Container style={{ marginTop: "100px" }}>
       {showError && <Alert variant="danger">{message}</Alert>}
 
       <StoreModal

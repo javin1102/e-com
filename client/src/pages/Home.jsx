@@ -52,7 +52,7 @@ const Home = () => {
   return (
     <Fragment>
       <Nav />
-      <Container className="mt-5">
+      <Container style={{ marginTop: "150px" }}>
         <Row className="gx-1 gy-5">
           {products.map((product, i) => {
             return (

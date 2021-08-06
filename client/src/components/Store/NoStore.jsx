@@ -21,7 +21,7 @@ const NoStore = () => {
     dispatch(registerStoreAction({ name: storeName }, token));
   };
   return (
-    <Container className="d-flex flex-column mt-5">
+    <Container className="d-flex flex-column" style={{ marginTop: "100px" }}>
       <img
         src={cart}
         alt="cart"
