@@ -6,31 +6,44 @@ const Store = require("../../models/Store");
 //@access public
 //@desc GET ALL Product
 router.get("/", async (req, res) => {
-  try {
-    const stores = await Store.find();
-    if (!stores) return res.status(404).json({ msg: "No Store!" });
+  const limit = parseInt(req.query.limit);
 
-    const products = [];
-    stores.forEach((store) => {
-      store.products.forEach((product) => {
-        const { date, _id, name, price, stock, pathName, pathType } = product;
-        const path = `data:${pathType};charset=utf-8;base64,${pathName.toString(
-          "base64"
-        )}`;
-        products.push({
-          storeName: store.name,
-          storeId: store.id,
-          _id,
-          name,
-          price,
-          stock,
-          path,
-          date,
+  const results = {};
+
+  try {
+    Store.findRandom({}, {}, { limit: 2 }, function (err, stores) {
+      if (!err) {
+        if (!stores) return res.status(404).json({ msg: "No Store!" });
+
+        const products = [];
+        stores.forEach((store) => {
+          store.products.forEach((product) => {
+            const { date, _id, name, price, stock, pathName, pathType } =
+              product;
+            const path = `data:${pathType};charset=utf-8;base64,${pathName.toString(
+              "base64"
+            )}`;
+            products.push({
+              storeName: store.name,
+              storeId: store.id,
+              _id,
+              name,
+              price,
+              stock,
+              path,
+              date,
+            });
+          });
         });
-      });
+
+        products.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        results.results = products;
+        results.maxPages = Math.ceil(products.length / limit);
+
+        return res.status(200).json(results);
+      }
     });
-    products.sort((a, b) => new Date(b.date) - new Date(a.date));
-    return res.status(200).json(products);
   } catch (err) {
     console.error(err);
     return res.status(500).json({ msg: "Server Error" });
