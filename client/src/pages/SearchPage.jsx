@@ -1,17 +1,27 @@
 import Nav from "../components/Nav";
 import { Container, Row, Col, Pagination } from "react-bootstrap";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, useMemo } from "react";
 import ItemCard from "../components/ItemCard";
-import { getAllProductsAction } from "../redux/product/product-action";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
+import { productListAction } from "../redux/product/productlist-slice";
+import { getSearchProductsAction } from "../redux/product/product-action";
+import { useSelector } from "react-redux";
 import { productsLimit } from "../utils/utils";
+import { useLocation } from "react-router-dom";
 
-const Home = () => {
-  //redux
+const SearchPage = () => {
+  const location = useLocation();
+  const query = useMemo(() => new URLSearchParams(location.search), [location]);
+
+  //reedux
   const dispatch = useDispatch();
-
-  const { results } = useSelector((state) => state.productList);
-  const lastPages = results.maxPages > 3 ? 3 : results.maxPages;
+  const { searchResults } = useSelector((state) => state.productList);
+  const lastPages = searchResults.maxPages > 3 ? 3 : searchResults.maxPages;
+  //reset and get
+  useEffect(() => {
+    dispatch(productListAction.resetSearchResults());
+    dispatch(getSearchProductsAction(query.get("search")));
+  }, [dispatch, query]);
   //state
   const [activePage, setActivePage] = useState(1);
 
@@ -23,22 +33,13 @@ const Home = () => {
 
   let items = [];
   for (let number = beginIndex; number <= lastIndex; number++) {
-    if (
-      activePage === lastIndex &&
-      lastIndex < results.maxPages &&
-      !!results.maxPages
-    ) {
+    if (activePage === lastIndex && lastIndex < searchResults.maxPages) {
       setLastIndex(lastIndex + 1);
       setBeginIndex(beginIndex + 1);
-    } else if (
-      activePage === beginIndex &&
-      beginIndex > 1 &&
-      !!results.maxPages
-    ) {
+    } else if (activePage === beginIndex && beginIndex > 1) {
       setLastIndex(lastIndex - 1);
       setBeginIndex(beginIndex - 1);
     }
-
     items.push(
       <Pagination.Item
         key={number}
@@ -51,14 +52,13 @@ const Home = () => {
   }
 
   let products = [];
-  if (!!results.results) products = results.results.slice(startIndex, endIndex);
-  useEffect(() => {
-    dispatch(getAllProductsAction());
-  }, [dispatch]);
-  return (
-    <Fragment>
-      <Nav />
-      <Container style={{ marginTop: "150px" }}>
+  if (!!searchResults.results)
+    products = searchResults.results.slice(startIndex, endIndex);
+  const renderElement =
+    products.length === 0 ? (
+      <h1>No Product</h1>
+    ) : (
+      <>
         <Row className="gx-1 gy-5">
           {products.map((product, i) => {
             return (
@@ -88,15 +88,20 @@ const Home = () => {
 
             <Pagination.Next
               onClick={() => {
-                activePage < results.maxPages &&
+                activePage < searchResults.maxPages &&
                   setActivePage((prev) => prev + 1);
               }}
             />
           </Pagination>
         </div>
-      </Container>
+      </>
+    );
+  return (
+    <Fragment>
+      <Nav searchKey={query.get("search")} />
+      <Container style={{ marginTop: "150px" }}>{renderElement}</Container>
     </Fragment>
   );
 };
 
-export default Home;
+export default SearchPage;

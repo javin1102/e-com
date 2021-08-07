@@ -1,6 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
-  results: {},
+  results: {
+    results: [],
+    maxPages: 1,
+  },
+  searchResults: { results: [], maxPages: 1 },
 };
 const productListSlice = createSlice({
   name: "productList",
@@ -12,6 +16,15 @@ const productListSlice = createSlice({
     getProductList(state, action) {
       state.results = action.payload.results;
       console.log(state.results);
+    },
+    getSearchProductList(state, action) {
+      state.searchResults = action.payload.searchResults;
+    },
+    resetSearchResults: (state) => {
+      state.searchResults = {};
+    },
+    resetResults: (state) => {
+      state.results = {};
     },
   },
 });

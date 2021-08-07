@@ -1,6 +1,5 @@
 import React from "react";
-import { Card, Button } from "react-bootstrap";
-import logo from "../../../images/logo.svg";
+import { Button } from "react-bootstrap";
 import classes from "./CartCard.module.css";
 import { formatter } from "../../../utils/utils";
 import { cartAction } from "../../../redux/cart/cart-slice";

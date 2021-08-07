@@ -7,6 +7,7 @@ import YourStore from "./pages/YourStore";
 import YourCart from "./pages/YourCart";
 import AddProduct from "./pages/AddProduct";
 import UpdateProduct from "./pages/UpdateProduct";
+import SearchPage from "./pages/SearchPage";
 import { useDispatch } from "react-redux";
 import { authAction } from "./redux/auth/auth-action";
 import { useEffect } from "react";
@@ -30,6 +31,7 @@ function App() {
         <Route exact path="/" component={Home} />
         <Route exact path="/register" component={Register} />
         <Route exact path="/login" component={Login} />
+        <Route exact path="/products" component={SearchPage} />
         <Route exact path="/yourCart">
           <YourCart searchBar={false} />
         </Route>
