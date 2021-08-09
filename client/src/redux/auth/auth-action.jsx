@@ -1,7 +1,6 @@
 import axios from "axios";
 import { messageAction } from "../message-slice";
 import { userAction } from "../user-slice";
-require("dotenv").config();
 
 export const authAction = (token) => {
   return async (dispatch) => {
