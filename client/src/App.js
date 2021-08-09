@@ -11,7 +11,7 @@ import SearchPage from "./pages/SearchPage";
 import { useDispatch } from "react-redux";
 import { authAction } from "./redux/auth/auth-action";
 import { useEffect } from "react";
-import classes from "./app.css";
+import "./app.css";
 
 function App() {
   const dispatch = useDispatch();
