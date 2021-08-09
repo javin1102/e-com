@@ -1,6 +1,7 @@
 import axios from "axios";
 import { messageAction } from "../message-slice";
 import { userAction } from "../user-slice";
+require("dotenv").config();
 
 export const authAction = (token) => {
   return async (dispatch) => {
@@ -11,7 +12,7 @@ export const authAction = (token) => {
         },
       };
       const response = await axios.get(
-        "http://localhost:5000/api/auth",
+        `${process.env.REACT_APP_BASE_URL}/auth`,
         config
       );
       return response;

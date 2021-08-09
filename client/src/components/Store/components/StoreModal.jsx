@@ -16,15 +16,17 @@ const StoreModal = (props) => {
   const deleteHandler = () => {
     dispatch(deleteProductAction(props.selectedId, user.token));
     setDoneDeleteAction(true);
+
     props.showModalHandler(false);
   };
   const closeModalHandler = () => {
     props.showModalHandler(false);
   };
   useEffect(() => {
-    if (doneDeleteAction && status !== 200) {
+    if (doneDeleteAction && status !== 200 && !!status) {
       props.showError(true);
     }
+
     setDoneDeleteAction(false);
   }, [doneDeleteAction, props, status]);
   return (

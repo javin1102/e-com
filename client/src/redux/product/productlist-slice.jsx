@@ -15,7 +15,6 @@ const productListSlice = createSlice({
     },
     getProductList(state, action) {
       state.results = action.payload.results;
-      console.log(state.results);
     },
     getSearchProductList(state, action) {
       state.searchResults = action.payload.searchResults;

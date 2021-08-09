@@ -5,6 +5,9 @@ import { NavLink, useHistory } from "react-router-dom";
 import classes from "./Nav.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { userAction } from "../redux/user-slice";
+import { messageAction } from "../redux/message-slice";
+import { productListAction } from "../redux/product/productlist-slice";
+import { cartAction } from "../redux/cart/cart-slice";
 const Nav = (props) => {
   const [searchKey, setSearchKey] = useState("");
 
@@ -37,6 +40,9 @@ const Nav = (props) => {
           sessionStorage.removeItem("x-auth-token");
           localStorage.removeItem("x-auth-token");
           dispatch(userAction.logoutUser());
+          dispatch(messageAction.reset());
+          dispatch(cartAction.reset());
+          dispatch(productListAction.reset());
         }}
         className={classes["nav-a-1"] + " ms-3"}
         to="/login"

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Alert } from "react-bootstrap";
+import React, { useEffect, useState, useMemo } from "react";
+import { Container, Row, Col, Alert, Spinner } from "react-bootstrap";
 import StoreCard from "./components/StoreCard";
 import { NavLink } from "react-router-dom";
 import classes from "./HasStore.module.css";
@@ -15,7 +15,7 @@ const HasStore = () => {
   //redux
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const { products } = user.store;
+
   const { message } = useSelector((state) => state.message);
 
   //stateHandler
@@ -26,6 +26,8 @@ const HasStore = () => {
     dispatch(getProductsAction(user.token));
   }, [dispatch, user.token]);
 
+  const { products } = useSelector((state) => state.user.store);
+
   useEffect(() => {
     if (showError) {
       setTimeout(() => {
@@ -33,7 +35,33 @@ const HasStore = () => {
       }, 3000);
     }
   }, [showError]);
-
+  const renderComponents =
+    message === "Loading" ? (
+      <>
+        <Spinner className="d-flex mx-auto" animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </>
+    ) : (
+      <>
+        {!!products &&
+          products.map((product, i) => {
+            return (
+              <Col key={i}>
+                <StoreCard
+                  id={product.id}
+                  name={product.name}
+                  price={product.price}
+                  stock={product.stock}
+                  path={product.path}
+                  showModal={showModalHandler}
+                  selectedIdHandler={(id) => setSelectedId(id)}
+                />
+              </Col>
+            );
+          })}
+      </>
+    );
   return (
     <Container style={{ marginTop: "100px" }}>
       {showError && <Alert variant="danger">{message}</Alert>}
@@ -53,21 +81,7 @@ const HasStore = () => {
         >
           Add Product +
         </NavLink>
-        {products.map((product, i) => {
-          return (
-            <Col key={i}>
-              <StoreCard
-                id={product.id}
-                name={product.name}
-                price={product.price}
-                stock={product.stock}
-                path={product.path}
-                showModal={showModalHandler}
-                selectedIdHandler={(id) => setSelectedId(id)}
-              />
-            </Col>
-          );
-        })}
+        {renderComponents}
       </Row>
     </Container>
   );

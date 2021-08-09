@@ -91,7 +91,7 @@ const UpdateProduct = () => {
       {status === 200 && isSubmitted && <Redirect to="/yourStore" />}
       <Container
         className="d-flex flex-column justify-content-center"
-        style={{ minHeight: "90vh" }}
+        style={{ minHeight: "90vh", marginTop: "100px" }}
       >
         {status !== 200 && status !== null && isSubmitted && (
           <Alert variant="danger" className="mt-5">

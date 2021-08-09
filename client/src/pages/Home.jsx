@@ -1,22 +1,23 @@
 import Nav from "../components/Nav";
-import { Container, Row, Col, Pagination } from "react-bootstrap";
+import { Container, Row, Col, Pagination, Spinner } from "react-bootstrap";
 import { Fragment, useEffect, useState } from "react";
 import ItemCard from "../components/ItemCard";
 import { getAllProductsAction } from "../redux/product/product-action";
 import { useSelector, useDispatch } from "react-redux";
 import { productsLimit } from "../utils/utils";
-
+import { messageAction } from "../redux/message-slice";
 const Home = () => {
   //redux
   const dispatch = useDispatch();
 
   const { results } = useSelector((state) => state.productList);
+  const { message } = useSelector((state) => state.message);
   const lastPages = results.maxPages > 3 ? 3 : results.maxPages;
   //state
   const [activePage, setActivePage] = useState(1);
 
   const [beginIndex, setBeginIndex] = useState(1);
-  const [lastIndex, setLastIndex] = useState(lastPages);
+  const [lastIndex, setLastIndex] = useState(!!lastPages ? lastPages : 1);
 
   const startIndex = (activePage - 1) * productsLimit;
   const endIndex = activePage * productsLimit;
@@ -53,29 +54,40 @@ const Home = () => {
   let products = [];
   if (!!results.results) products = results.results.slice(startIndex, endIndex);
   useEffect(() => {
+    dispatch(messageAction.reset());
     dispatch(getAllProductsAction());
   }, [dispatch]);
+  const renderComponents =
+    message === "Loading" ? (
+      <>
+        <Spinner className="d-flex mx-auto" animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </>
+    ) : (
+      <Row className="gx-1 gy-5">
+        {products.map((product, i) => {
+          return (
+            <Col key={i}>
+              <ItemCard
+                name={product.name}
+                price={product.price}
+                stock={product.stock}
+                path={product.path}
+                id={product._id}
+                storeName={product.storeName}
+                storeId={product.storeId}
+              />
+            </Col>
+          );
+        })}
+      </Row>
+    );
   return (
     <Fragment>
       <Nav />
       <Container style={{ marginTop: "150px" }}>
-        <Row className="gx-1 gy-5">
-          {products.map((product, i) => {
-            return (
-              <Col key={i}>
-                <ItemCard
-                  name={product.name}
-                  price={product.price}
-                  stock={product.stock}
-                  path={product.path}
-                  id={product._id}
-                  storeName={product.storeName}
-                  storeId={product.storeId}
-                />
-              </Col>
-            );
-          })}
-        </Row>
+        {renderComponents}
         <div className="d-flex justify-content-center mt-5">
           <Pagination>
             <Pagination.Prev

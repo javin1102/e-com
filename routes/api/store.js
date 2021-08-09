@@ -123,7 +123,12 @@ router.get("/product/:productId", auth, async (req, res) => {
     if (!store) return res.status(404).json({ msg: "You dont have a store" });
     const product = store.products.find((product) => product.id === productId);
     if (!product) return res.status(404).json({ msg: "Product not found!" });
-    return res.status(200).json(product);
+    const path = `data:${
+      product.pathType
+    };charset=utf-8;base64,${product.pathName.toString("base64")}`;
+    const { id, name, price, stock, date } = product;
+    const newProduct = { id, name, price, path, stock, date };
+    return res.status(200).json(newProduct);
   } catch (err) {
     console.error(err);
     return res.status(500).json({ msg: "Server Error" });
@@ -145,7 +150,15 @@ router.delete("/product/:productId", auth, async (req, res) => {
       .indexOf(productId);
     store.products.splice(removeIndex, 1);
     await store.save();
-    res.json(store.products);
+    let p = [];
+    store.products.forEach((product) => {
+      const path = `data:${
+        product.pathType
+      };charset=utf-8;base64,${product.pathName.toString("base64")}`;
+      const { id, name, price, stock, date } = product;
+      p.push({ id, name, price, stock, date, path });
+    });
+    return res.status(200).json(p);
   } catch (err) {
     console.error(err);
     return res.status(500).json({ msg: "Server Error" });

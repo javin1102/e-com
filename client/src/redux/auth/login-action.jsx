@@ -1,6 +1,8 @@
 import { userAction } from "../user-slice";
 import { messageAction } from "../message-slice";
+
 import axios from "axios";
+
 export const loginUser = (data, rememberMe) => {
   return async (dispatch) => {
     const loginRequest = async () => {
@@ -12,7 +14,7 @@ export const loginUser = (data, rememberMe) => {
       const body = JSON.stringify(data);
 
       const response = await axios.post(
-        "http://localhost:5000/api/auth",
+        `${process.env.REACT_APP_BASE_URL}/auth`,
         body,
         config
       );
@@ -20,6 +22,12 @@ export const loginUser = (data, rememberMe) => {
     };
 
     try {
+      dispatch(
+        messageAction.showNotification({
+          status: null,
+          message: "Loading",
+        })
+      );
       const res = await loginRequest();
       dispatch(
         messageAction.showNotification({
@@ -38,7 +46,7 @@ export const loginUser = (data, rememberMe) => {
       }
       sessionStorage.setItem("x-auth-token", res.data.token);
     } catch (err) {
-      console.error(err.response.status);
+      console.error(err.response.data);
       dispatch(
         messageAction.showNotification({
           status: err.response.status,

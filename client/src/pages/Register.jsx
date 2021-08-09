@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Form, Button, Container, Alert } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Form, Button, Container, Alert, Spinner } from "react-bootstrap";
 import logo from "../images/logo.svg";
 import { NavLink, Redirect } from "react-router-dom";
 import { registerUser } from "../redux/auth/register-action";
 import { useDispatch, useSelector } from "react-redux";
-
+import { messageAction } from "../redux/message-slice";
 const Register = () => {
   //set states
   const [validated, setValidated] = useState(false);
@@ -42,6 +42,9 @@ const Register = () => {
     return re.test(String(e).toLowerCase());
   }
 
+  useEffect(() => {
+    dispatch(messageAction.reset());
+  }, [dispatch]);
   return (
     <Container
       className="d-flex flex-column justify-content-center"
@@ -135,7 +138,17 @@ const Register = () => {
             Already have account?
           </NavLink>
         </div>
-
+        {message === "Loading" && (
+          <>
+            <Spinner
+              className="d-flex mx-auto"
+              animation="border"
+              role="status"
+            >
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </>
+        )}
         <div className="d-grid gap-2 d-md-flex justify-content-md-center mt-5">
           <Button variant="dark" type="submit">
             Register

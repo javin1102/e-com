@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import { Form, Button, Container, Alert } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Form, Button, Container, Alert, Spinner } from "react-bootstrap";
 import { NavLink, Redirect } from "react-router-dom";
 import logo from "../images/logo.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../redux/auth/login-action";
+import { messageAction } from "../redux/message-slice";
+
 const Login = () => {
   //set states
   const [validated, setValidated] = useState(false);
@@ -25,6 +27,10 @@ const Login = () => {
     dispatch(loginUser({ email, password }, rememberMe));
   };
 
+  useEffect(() => {
+    dispatch(messageAction.reset());
+  }, [dispatch]);
+
   return (
     <Container
       className="d-flex flex-column justify-content-center"
@@ -38,7 +44,7 @@ const Login = () => {
         className="align-self-center"
       />
       <h2 className="align-self-center mt-2">INCOMING</h2>
-      {(status === 400 || status === 500) && (
+      {status !== null && status !== 200 && (
         <Alert variant="danger">{message}</Alert>
       )}
       <Form noValidate onSubmit={handleSubmit}>
@@ -85,6 +91,17 @@ const Login = () => {
             Don't have account?
           </NavLink>
         </div>
+        {message === "Loading" && (
+          <>
+            <Spinner
+              className="d-flex mx-auto"
+              animation="border"
+              role="status"
+            >
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </>
+        )}
         <div className="d-grid gap-2 d-md-flex justify-content-md-center mt-5">
           <Button variant="dark" type="submit">
             Login

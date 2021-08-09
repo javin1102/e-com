@@ -1,11 +1,12 @@
 import axios from "axios";
-import { base_url } from "../../utils/utils";
 import { messageAction } from "../message-slice";
 import { productListAction } from "./productlist-slice";
 export const getAllProductsAction = () => {
   return async (dispatch) => {
     const getProductsRequest = async () => {
-      const response = await axios.get(`${base_url}/products?limit=100`);
+      const response = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/products?limit=100`
+      );
       return response;
     };
     try {
@@ -35,11 +36,14 @@ export const getSearchProductsAction = (searchKey) => {
   return async (dispatch) => {
     const getSearchProductRequest = async () => {
       const response = await axios.get(
-        `${base_url}/products?search=${searchKey}&limit=100`
+        `${process.env.REACT_APP_BASE_URL}/products?search=${searchKey}&limit=100`
       );
       return response;
     };
     try {
+      dispatch(
+        messageAction.showNotification({ message: "Loading", status: null })
+      );
       const res = await getSearchProductRequest();
       dispatch(productListAction.resetSearchResults());
       dispatch(

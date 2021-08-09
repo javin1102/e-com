@@ -1,6 +1,5 @@
 import { userAction } from "../user-slice";
 import axios from "axios";
-import { base_url } from "../../utils/utils";
 import { messageAction } from "../message-slice";
 export const getStoreAction = (token) => {
   return async (dispatch) => {
@@ -10,7 +9,10 @@ export const getStoreAction = (token) => {
           "x-auth-token": token,
         },
       };
-      const response = await axios.get(`${base_url}/store`, config);
+      const response = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/store`,
+        config
+      );
       return response;
     };
     try {
@@ -44,7 +46,11 @@ export const registerStoreAction = (data, token) => {
         },
       };
       const body = JSON.stringify(data);
-      const response = await axios.post(`${base_url}/store`, body, config);
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/store`,
+        body,
+        config
+      );
       return response;
     };
 
@@ -81,7 +87,7 @@ export const addProductAction = (data, token) => {
       };
       const body = JSON.stringify(data);
       const response = await axios.post(
-        `${base_url}/store/product`,
+        `${process.env.REACT_APP_BASE_URL}/store/product`,
         body,
         config
       );
@@ -121,10 +127,19 @@ export const getProductsAction = (token) => {
           "x-auth-token": token,
         },
       };
-      const response = await axios.get(`${base_url}/store/product`, config);
+      const response = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/store/product`,
+        config
+      );
       return response;
     };
     try {
+      dispatch(
+        messageAction.showNotification({
+          status: null,
+          message: "Loading",
+        })
+      );
       const res = await getProductsRequest();
 
       dispatch(userAction.getProductData({ products: res.data }));
@@ -159,7 +174,7 @@ export const deleteProductAction = (id, token) => {
         },
       };
       const response = await axios.delete(
-        `${base_url}/store/product/${id}`,
+        `${process.env.REACT_APP_BASE_URL}/store/product/${id}`,
         config
       );
       return response;
@@ -168,6 +183,7 @@ export const deleteProductAction = (id, token) => {
       dispatch(
         messageAction.showNotification({
           status: null,
+          message: "Loading",
         })
       );
       const res = await deleteRequest();
@@ -199,7 +215,7 @@ export const updateProductAction = (id, data, token) => {
       };
       // const body = JSON.stringify(data);
       const response = await axios.put(
-        `${base_url}/store/product/${id}`,
+        `${process.env.REACT_APP_BASE_URL}/store/product/${id}`,
         data,
         config
       );

@@ -10,6 +10,10 @@ const messageSlice = createSlice({
       state.status = action.payload.status;
       state.message = action.payload.message;
     },
+    reset(state) {
+      state.message = null;
+      state.status = null;
+    },
   },
 });
 export const messageAction = messageSlice.actions;
