@@ -13,11 +13,7 @@ export const loginUser = (data, rememberMe) => {
       };
       const body = JSON.stringify(data);
 
-      const response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/auth`,
-        body,
-        config
-      );
+      const response = await axios.post(`/api/auth`, body, config);
       return response;
     };
 

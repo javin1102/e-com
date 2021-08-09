@@ -11,10 +11,7 @@ export const authAction = (token) => {
           "x-auth-token": token,
         },
       };
-      const response = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/auth`,
-        config
-      );
+      const response = await axios.get(`/api/auth`, config);
       return response;
     };
     try {

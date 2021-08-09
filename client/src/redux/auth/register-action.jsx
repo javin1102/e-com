@@ -10,11 +10,7 @@ export const registerUser = (data) => {
         },
       };
       const body = JSON.stringify(data);
-      const res = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/register`,
-        body,
-        config
-      );
+      const res = await axios.post(`/api/register`, body, config);
       return res;
     };
 

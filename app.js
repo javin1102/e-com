@@ -24,8 +24,6 @@ const connectDB = async () => {
   }
 };
 connectDB();
-app.get("/", (req, res) => res.send("API RUNNING"));
-
 //ROUTES
 app.use("/api/register", require("./routes/api/register"));
 app.use("/api/auth", require("./routes/api/auth"));

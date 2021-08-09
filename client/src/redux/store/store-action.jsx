@@ -9,10 +9,7 @@ export const getStoreAction = (token) => {
           "x-auth-token": token,
         },
       };
-      const response = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/store`,
-        config
-      );
+      const response = await axios.get(`/api/store`, config);
       return response;
     };
     try {
@@ -46,11 +43,7 @@ export const registerStoreAction = (data, token) => {
         },
       };
       const body = JSON.stringify(data);
-      const response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/store`,
-        body,
-        config
-      );
+      const response = await axios.post(`/api/store`, body, config);
       return response;
     };
 
@@ -86,11 +79,7 @@ export const addProductAction = (data, token) => {
         },
       };
       const body = JSON.stringify(data);
-      const response = await axios.post(
-        `${process.env.REACT_APP_BASE_URL}/store/product`,
-        body,
-        config
-      );
+      const response = await axios.post(`/api/store/product`, body, config);
       return response;
     };
     try {
@@ -127,10 +116,7 @@ export const getProductsAction = (token) => {
           "x-auth-token": token,
         },
       };
-      const response = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/store/product`,
-        config
-      );
+      const response = await axios.get(`/api/store/product`, config);
       return response;
     };
     try {
@@ -173,10 +159,7 @@ export const deleteProductAction = (id, token) => {
           "x-auth-token": token,
         },
       };
-      const response = await axios.delete(
-        `${process.env.REACT_APP_BASE_URL}/store/product/${id}`,
-        config
-      );
+      const response = await axios.delete(`/api/store/product/${id}`, config);
       return response;
     };
     try {
@@ -215,7 +198,7 @@ export const updateProductAction = (id, data, token) => {
       };
       // const body = JSON.stringify(data);
       const response = await axios.put(
-        `${process.env.REACT_APP_BASE_URL}/store/product/${id}`,
+        `/api/store/product/${id}`,
         data,
         config
       );

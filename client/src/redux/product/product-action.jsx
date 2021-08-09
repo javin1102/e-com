@@ -4,9 +4,7 @@ import { productListAction } from "./productlist-slice";
 export const getAllProductsAction = () => {
   return async (dispatch) => {
     const getProductsRequest = async () => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/products?limit=100`
-      );
+      const response = await axios.get(`/api/products?limit=100`);
       return response;
     };
     try {
@@ -36,7 +34,7 @@ export const getSearchProductsAction = (searchKey) => {
   return async (dispatch) => {
     const getSearchProductRequest = async () => {
       const response = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/products?search=${searchKey}&limit=100`
+        `/api/products?search=${searchKey}&limit=100`
       );
       return response;
     };
