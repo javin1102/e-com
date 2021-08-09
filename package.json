@@ -14,7 +14,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "abazunts-mongoose-random": "^1.4.1",
     "bcryptjs": "^2.4.3",
