@@ -10,7 +10,7 @@
     "server": "nodemon app",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "start": "node app"
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
