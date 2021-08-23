@@ -11,6 +11,7 @@ This is full stack e-com app. Auth implemented using JWT. What users can do:
 - View STORE product that is added
 - Add available product to shopping cart
 - View shopping cart summary
+- Search product by product name
 
 Unauthenticated user can see products that is available in the app but won't be able to register a store.
 
