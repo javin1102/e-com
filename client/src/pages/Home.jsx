@@ -6,6 +6,8 @@ import { getAllProductsAction } from "../redux/product/product-action";
 import { useSelector, useDispatch } from "react-redux";
 import { productsLimit } from "../utils/utils";
 import { messageAction } from "../redux/message-slice";
+import { userAction } from "../redux/user-slice";
+import { Redirect } from "react-router";
 const Home = () => {
   //redux
   const dispatch = useDispatch();
@@ -13,6 +15,7 @@ const Home = () => {
   const { results } = useSelector((state) => state.productList);
   const { message } = useSelector((state) => state.message);
   const lastPages = results.maxPages > 3 ? 3 : results.maxPages;
+
   //state
   const [activePage, setActivePage] = useState(1);
 
@@ -23,6 +26,7 @@ const Home = () => {
   const endIndex = activePage * productsLimit;
 
   let items = [];
+
   // console.log(beginIndex, lastIndex, activePage);
   for (let number = beginIndex; number <= lastIndex; number++) {
     if (
@@ -58,6 +62,17 @@ const Home = () => {
     dispatch(messageAction.reset());
     dispatch(getAllProductsAction());
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(userAction.reset());
+    const token = localStorage.getItem("x-auth-token")
+      ? localStorage.getItem("x-auth-token")
+      : sessionStorage.getItem("x-auth-token");
+    if (token) {
+      dispatch(userAction.authenticate({ token, isAuthenticated: true }));
+    }
+  }, []);
+
   const renderComponents =
     message === "Loading" ? (
       <>
