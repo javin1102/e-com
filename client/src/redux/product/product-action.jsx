@@ -1,10 +1,11 @@
 import axios from "axios";
 import { messageAction } from "../message-slice";
 import { productListAction } from "./productlist-slice";
+import { productsLimit } from "../../utils/utils";
 export const getAllProductsAction = () => {
   return async (dispatch) => {
     const getProductsRequest = async () => {
-      const response = await axios.get(`/api/products?limit=100`);
+      const response = await axios.get(`/api/products?limit=${productsLimit}`);
       return response;
     };
     try {

@@ -23,6 +23,7 @@ const Home = () => {
   const endIndex = activePage * productsLimit;
 
   let items = [];
+  // console.log(beginIndex, lastIndex, activePage);
   for (let number = beginIndex; number <= lastIndex; number++) {
     if (
       activePage === lastIndex &&

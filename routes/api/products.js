@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
 
   try {
     if (!search) {
-      Store.findRandom({}, {}, { limit: 2 }, function (err, stores) {
+      Store.findRandom({}, {}, { limit: 20 }, function (err, stores) {
         if (!err) {
           if (!stores) return res.status(404).json({ msg: "No Store!" });
 
