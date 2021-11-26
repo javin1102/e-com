@@ -7,10 +7,10 @@ This is full stack e-com app. Auth implemented using JWT. What users can do:
 - Register
 - Login
 - Register store
-- Add Product
-- Delete Product
-- Update Product
-- View STORE product that is added
+- Add Product  (store is registered)
+- Delete Product (store is registered)
+- Update Product (store is registered)
+- View STORE product that is added (store is registered)
 - Add available product to shopping cart
 - View shopping cart summary
 - Search product by product name
