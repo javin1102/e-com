@@ -70,7 +70,7 @@ const Home = () => {
     if (token) {
       dispatch(userAction.authenticate({ token, isAuthenticated: true }));
     }
-  }, []);
+  }, [dispatch]);
 
   const renderComponents =
     message === "Loading" ? (

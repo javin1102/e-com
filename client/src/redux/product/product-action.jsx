@@ -5,7 +5,7 @@ import { productsLimit } from "../../utils/utils";
 export const getAllProductsAction = () => {
   return async (dispatch) => {
     const getProductsRequest = async () => {
-      const response = await axios.get(`/api/products?limit=${productsLimit}`);
+      const response = await axios.get(`/api/products?limit=100`);
       return response;
     };
     try {
