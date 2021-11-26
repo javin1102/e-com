@@ -69,6 +69,8 @@ const Home = () => {
       : sessionStorage.getItem("x-auth-token");
     if (token) {
       dispatch(userAction.authenticate({ token, isAuthenticated: true }));
+    } else {
+      dispatch(userAction.authenticate({ token: "", isAuthenticated: false }));
     }
   }, [dispatch]);
 
