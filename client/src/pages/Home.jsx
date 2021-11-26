@@ -7,7 +7,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { productsLimit } from "../utils/utils";
 import { messageAction } from "../redux/message-slice";
 import { userAction } from "../redux/user-slice";
-import { Redirect } from "react-router";
 const Home = () => {
   //redux
   const dispatch = useDispatch();
